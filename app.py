@@ -34,7 +34,7 @@ async def chat(prompt: str):
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World!"}
+    return {"message": "Hello World, Updated!"}
 
 
 if __name__ == "__main__":
