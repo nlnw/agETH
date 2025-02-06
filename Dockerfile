@@ -16,7 +16,4 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Reset the entrypoint, don't invoke `uv`
-ENTRYPOINT []
-
-CMD ["python3", "/app/myagent.py", "--token", "${HF_API_TOKEN}"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
