@@ -34,8 +34,8 @@ async def chat(prompt: str):
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World, Updated!"}
+    return {"message": "Hello World, Updated again!"}
 
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("app:app", reload=True)

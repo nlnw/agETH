@@ -25,3 +25,9 @@ jobs:
           tags: ghcr.io/nlnw/projects/ageth:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl $RENDER_DEPLOY_HOOK
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
