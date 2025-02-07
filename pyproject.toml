@@ -5,7 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "cdp-langchain>=0.0.13",
     "fastapi>=0.115.8",
+    "langchain-cohere>=0.4.2",
+    "python-dotenv>=1.0.1",
     "smolagents>=1.7.0",
     "uvicorn>=0.34.0",
 ]
