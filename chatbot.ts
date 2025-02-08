@@ -8,6 +8,7 @@ import {
   cdpApiActionProvider,
   cdpWalletActionProvider,
   pythActionProvider,
+  ViemWalletProvider,
 } from "@coinbase/agentkit";
 import { myActionProvider } from "./myActionProvider";
 import { getLangChainTools } from "@coinbase/agentkit-langchain";
@@ -56,7 +57,10 @@ async function initialize() {
 
   const config = {
     apiKeyName: process.env.CDP_API_KEY_NAME,
-    apiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    apiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(
+      /\\n/g,
+      "\n"
+    ),
     cdpWalletData: walletDataStr || undefined,
     networkId: process.env.NETWORK_ID || "base-sepolia",
   };
@@ -64,7 +68,10 @@ async function initialize() {
 
   const agentkit = await AgentKit.from({
     cdpApiKeyName: process.env.CDP_API_KEY_NAME,
-    cdpApiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    cdpApiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(
+      /\\n/g,
+      "\n"
+    ),
     walletProvider,
     actionProviders: [
       twitterActionProvider(),
@@ -73,7 +80,10 @@ async function initialize() {
       // erc20ActionProvider(),
       cdpApiActionProvider({
         apiKeyName: process.env.CDP_API_KEY_NAME,
-        apiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+        apiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(
+          /\\n/g,
+          "\n"
+        ),
       }),
       // myActionProvider(),
       // cdpWalletActionProvider({
@@ -89,7 +99,9 @@ async function initialize() {
   const memory = new MemorySaver();
 
   // React Agent options
-  const agentConfig = { configurable: { thread_id: "Twitter Agentkit Chatbot Example!" } };
+  const agentConfig = {
+    configurable: { thread_id: "Twitter Agentkit Chatbot Example!" },
+  };
 
   // Create React Agent using the LLM and Twitter (X) tools
   const agent = createReactAgent({
@@ -120,7 +132,10 @@ async function runAutonomousMode(agent: any, config: any, interval = 10) {
         "Be creative and do something interesting on the blockchain. " +
         "Choose an action or set of actions and execute it that highlights your abilities.";
 
-      const stream = await agent.stream({ messages: [new HumanMessage(thought)] }, config);
+      const stream = await agent.stream(
+        { messages: [new HumanMessage(thought)] },
+        config
+      );
 
       for await (const chunk of stream) {
         if ("agent" in chunk) {
@@ -131,7 +146,7 @@ async function runAutonomousMode(agent: any, config: any, interval = 10) {
         console.log("-------------------");
       }
 
-      await new Promise(resolve => setTimeout(resolve, interval * 1000));
+      await new Promise((resolve) => setTimeout(resolve, interval * 1000));
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error:", error.message);
@@ -157,7 +172,7 @@ async function runChatMode(agent: any, config: any) {
   });
 
   const question = (prompt: string): Promise<string> =>
-    new Promise(resolve => rl.question(prompt, resolve));
+    new Promise((resolve) => rl.question(prompt, resolve));
 
   try {
     // eslint-disable-next-line no-constant-condition
@@ -168,7 +183,10 @@ async function runChatMode(agent: any, config: any) {
         break;
       }
 
-      const stream = await agent.stream({ messages: [new HumanMessage(userInput)] }, config);
+      const stream = await agent.stream(
+        { messages: [new HumanMessage(userInput)] },
+        config
+      );
 
       for await (const chunk of stream) {
         if ("agent" in chunk) {
@@ -201,7 +219,7 @@ async function chooseMode(): Promise<"chat" | "auto"> {
   });
 
   const question = (prompt: string): Promise<string> =>
-    new Promise(resolve => rl.question(prompt, resolve));
+    new Promise((resolve) => rl.question(prompt, resolve));
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -245,9 +263,38 @@ async function main() {
   }
 }
 
+export async function runPrompt(userInput: string) {
+  const { agent, config } = await initialize();
+
+  async function* streamResponse() {
+    try {
+      const stream = await agent.stream(
+        { messages: [new HumanMessage(userInput)] },
+        config
+      );
+
+      for await (const chunk of stream) {
+        if ("agent" in chunk) {
+          yield chunk.agent.messages[0].content;
+        } else if ("tools" in chunk) {
+          yield chunk.tools.messages[0].content;
+        }
+        yield "-------------------";
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error:", error.message);
+        yield "Error: " + error.message;
+      }
+    }
+  }
+
+  return streamResponse();
+}
+
 if (require.main === module) {
   console.log("Starting Agent...");
-  main().catch(error => {
+  main().catch((error) => {
     console.error("Fatal error:", error);
     process.exit(1);
   });

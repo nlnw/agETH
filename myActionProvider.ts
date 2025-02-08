@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { encodeFunctionData, Hex } from "viem";
-import { ActionProvider, Network, CreateAction, EvmWalletProvider } from "@coinbase/agentkit";
+import {
+  ActionProvider,
+  Network,
+  CreateAction,
+  EvmWalletProvider,
+} from "@coinbase/agentkit";
 
 export const WrapEthSchema = z
   .object({
@@ -77,7 +82,7 @@ Important notes:
   })
   async myAction(
     walletProvider: EvmWalletProvider,
-    args: z.infer<typeof WrapEthSchema>,
+    args: z.infer<typeof WrapEthSchema>
   ): Promise<string> {
     try {
       const hash = await walletProvider.sendTransaction({
@@ -104,7 +109,8 @@ Important notes:
    * @returns True if the Weth action provider supports the network, false otherwise.
    */
   supportsNetwork = (network: Network) =>
-    network.networkId === "base-mainnet" || network.networkId === "base-sepolia";
+    network.networkId === "base-mainnet" ||
+    network.networkId === "base-sepolia";
 }
 
 export const myActionProvider = () => new MyActionProvider();
