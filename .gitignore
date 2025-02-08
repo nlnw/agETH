@@ -1,5 +1,7 @@
 __pycache__/
+/.astro
 /.env
+/dist/
 /node_modules/
 /todo.txt
-/wallet_data.txt
+wallet_data.txt

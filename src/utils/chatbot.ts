@@ -8,9 +8,8 @@ import {
   cdpApiActionProvider,
   cdpWalletActionProvider,
   pythActionProvider,
-  ViemWalletProvider,
 } from "@coinbase/agentkit";
-import { myActionProvider } from "./myActionProvider";
+// import { myActionProvider } from "./myActionProvider";
 import { getLangChainTools } from "@coinbase/agentkit-langchain";
 import { HumanMessage } from "@langchain/core/messages";
 import { MemorySaver } from "@langchain/langgraph";
@@ -19,7 +18,6 @@ import { ChatOpenAI } from "@langchain/openai";
 import { ChatCohere } from "@langchain/cohere";
 import * as dotenv from "dotenv";
 import * as readline from "readline";
-import * as fs from "fs";
 
 dotenv.config();
 
@@ -43,25 +41,13 @@ async function initialize() {
   // Initialize LLM
   const llm = new ChatCohere(); //({ model: "gpt-4o-mini" });
 
-  let walletDataStr: string | null = null;
-
-  const WALLET_DATA_FILE = "wallet_data.txt";
-  if (fs.existsSync(WALLET_DATA_FILE)) {
-    try {
-      walletDataStr = fs.readFileSync(WALLET_DATA_FILE, "utf8");
-    } catch (error) {
-      console.error("Error reading wallet data:", error);
-      // Continue without wallet data
-    }
-  }
-
   const config = {
     apiKeyName: process.env.CDP_API_KEY_NAME,
     apiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(
       /\\n/g,
       "\n"
     ),
-    cdpWalletData: walletDataStr || undefined,
+    cdpWalletData: process.env.WALLET_DATA_STR || undefined,
     networkId: process.env.NETWORK_ID || "base-sepolia",
   };
   const walletProvider = await CdpWalletProvider.configureWithWallet(config);
@@ -292,10 +278,10 @@ export async function runPrompt(userInput: string) {
   return streamResponse();
 }
 
-if (require.main === module) {
-  console.log("Starting Agent...");
-  main().catch((error) => {
-    console.error("Fatal error:", error);
-    process.exit(1);
-  });
-}
+// if (require.main === module) {
+//   console.log("Starting Agent...");
+//   main().catch((error) => {
+//     console.error("Fatal error:", error);
+//     process.exit(1);
+//   });
+// }
