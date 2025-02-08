@@ -1,14 +1,14 @@
 import { useState } from "react";
 
 export default function StreamingText() {
-  const [text, setText] = useState("");
+  const [text, setText] = useState([]);
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
   const fetchStream = async () => {
     if (!inputValue.trim()) return;
 
-    setText("");
+    setText(["Waiting for agent..."]);
     setLoading(true);
 
     try {
@@ -30,8 +30,9 @@ export default function StreamingText() {
         const { done, value } = await reader.read();
         if (done) break;
 
-        resultText += decoder.decode(value) + "\n";
-        setText(resultText);
+        resultText += decoder.decode(value);
+        const lines = resultText.split("\n");
+        setText(lines);
       }
     } catch (error) {
       console.error("Error fetching stream:", error);
@@ -47,7 +48,7 @@ export default function StreamingText() {
         placeholder="Enter a prompt..."
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        className="p-2 border rounded w-full"
+        className="p-2 border rounded w-full box-border"
       />
       <button
         onClick={fetchStream}
@@ -56,7 +57,15 @@ export default function StreamingText() {
       >
         {loading ? "Loading..." : "Start Streaming"}
       </button>
-      <p className="font-mono text-lg mt-4">{text || "Waiting for input..."}</p>
+      <div className="font-mono mt-8">
+        {text.length > 0
+          ? text.map((line, index) => (
+              <p className="m-0" key={index}>
+                {line}
+              </p>
+            ))
+          : "Waiting for input..."}
+      </div>
     </div>
   );
 }

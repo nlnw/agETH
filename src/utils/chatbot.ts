@@ -14,7 +14,6 @@ import { getLangChainTools } from "@coinbase/agentkit-langchain";
 import { HumanMessage } from "@langchain/core/messages";
 import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
-import { ChatOpenAI } from "@langchain/openai";
 import { ChatCohere } from "@langchain/cohere";
 import * as dotenv from "dotenv";
 import * as readline from "readline";
@@ -278,10 +277,10 @@ export async function runPrompt(userInput: string) {
   return streamResponse();
 }
 
-// if (require.main === module) {
-//   console.log("Starting Agent...");
-//   main().catch((error) => {
-//     console.error("Fatal error:", error);
-//     process.exit(1);
-//   });
-// }
+if (process.env.DEBUGGING) {
+  console.log("Starting Agent...");
+  main().catch((error) => {
+    console.error("Fatal error:", error);
+    process.exit(1);
+  });
+}

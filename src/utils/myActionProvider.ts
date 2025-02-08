@@ -1,116 +1,111 @@
-// import { z } from "zod";
-// import { encodeFunctionData } from "viem";
-// import {
-//   ActionProvider,
-//   Network,
-//   CreateAction,
-//   EvmWalletProvider,
-// } from "@coinbase/agentkit";
+import { z } from "zod";
+import { encodeFunctionData } from "viem";
+import {
+  ActionProvider,
+  type Network,
+  CreateAction,
+  EvmWalletProvider,
+} from "@coinbase/agentkit";
 
-// export const WrapEthSchema = z
-//   .object({
-//     amountToWrap: z.string().describe("Amount of ETH to wrap in wei"),
-//   })
-//   .strip()
-//   .describe("Instructions for wrapping ETH to WETH");
+export const UnwrapEthSchema = z
+  .object({
+    amountToUnwrap: z.string().describe("Amount of ETH to unwrap in wei"),
+  })
+  .strip()
+  .describe("Instructions for unwrapping ETH to WETH");
 
-// export const WETH_ADDRESS = "0x4200000000000000000000000000000000000006";
+export const WETH_ADDRESS = "0x4200000000000000000000000000000000000006";
 
-// export const WETH_ABI = [
-//   {
-//     inputs: [],
-//     name: "deposit",
-//     outputs: [],
-//     stateMutability: "payable",
-//     type: "function",
-//   },
-//   {
-//     inputs: [
-//       {
-//         name: "account",
-//         type: "address",
-//       },
-//     ],
-//     name: "balanceOf",
-//     outputs: [
-//       {
-//         type: "uint256",
-//       },
-//     ],
-//     stateMutability: "view",
-//     type: "function",
-//   },
-// ] as const;
+export const WETH_ABI = [
+  {
+    inputs: [],
+    name: "deposit",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [{ internalType: "uint256", name: "wad", type: "uint256" }],
+    name: "withdraw",
+    outputs: [],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "balanceOf",
+    outputs: [
+      {
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const;
 
-// /**
-//  * WethActionProvider is an action provider for WETH.
-//  */
-// export class MyActionProvider extends ActionProvider<EvmWalletProvider> {
-//   /**
-//    * Constructor for the WethActionProvider.
-//    */
-//   constructor() {
-//     super("myaction", []);
-//   }
+/**
+ * WethActionProvider is an action provider for WETH.
+ */
+export class MyActionProvider extends ActionProvider<EvmWalletProvider> {
+  /**
+   * Constructor for the WethActionProvider.
+   */
+  constructor() {
+    super("unwrap_weth", []);
+  }
 
-//   /**
-//    * Wraps ETH to WETH.
-//    *
-//    * @param walletProvider - The wallet provider to use for the action.
-//    * @param args - The input arguments for the action.
-//    * @returns A message containing the transaction hash.
-//    */
-//   @CreateAction({
-//     name: "my_action",
-//     description: `
-//     This tool can only be used to wrap ETH to WETH.
-// Do not use this tool for any other purpose, or trading other assets.
+  /**
+   * Wraps ETH to WETH.
+   *
+   * @param walletProvider - The wallet provider to use for the action.
+   * @param args - The input arguments for the action.
+   * @returns A message containing the transaction hash.
+   */
+  @CreateAction({
+    name: "unwrap_weth",
+    description: `
+    This tool can only be used to unwrap ETH to WETH.`,
+    schema: UnwrapEthSchema,
+  })
+  async myAction(
+    walletProvider: EvmWalletProvider,
+    args: z.infer<typeof UnwrapEthSchema>
+  ): Promise<string> {
+    try {
+      const hash = await walletProvider.sendTransaction({
+        to: WETH_ADDRESS,
+        data: encodeFunctionData({
+          abi: WETH_ABI,
+          functionName: "withdraw",
+          args: [BigInt(args.amountToUnwrap)],
+        }),
+      });
 
-// Inputs:
-// - Amount of ETH to wrap.
+      await walletProvider.waitForTransactionReceipt(hash);
 
-// Important notes:
-// - The amount is a string and cannot have any decimal points, since the unit of measurement is wei.
-// - Make sure to use the exact amount provided, and if there's any doubt, check by getting more information before continuing with the action.
-// - 1 wei = 0.000000000000000001 WETH
-// - Minimum purchase amount is 100000000000000 wei (0.0000001 WETH)
-// - Only supported on the following networks:
-//   - Base Sepolia (ie, 'base-sepolia')
-//   - Base Mainnet (ie, 'base', 'base-mainnet')
-// `,
-//     schema: WrapEthSchema,
-//   })
-//   async myAction(
-//     walletProvider: EvmWalletProvider,
-//     args: z.infer<typeof WrapEthSchema>
-//   ): Promise<string> {
-//     try {
-//       const hash = await walletProvider.sendTransaction({
-//         to: WETH_ADDRESS,
-//         data: encodeFunctionData({
-//           abi: WETH_ABI,
-//           functionName: "deposit",
-//         }),
-//         value: BigInt(args.amountToWrap),
-//       });
+      return `Unwrapped ETH with transaction hash: ${hash}`;
+    } catch (error) {
+      return `Error wrapping ETH: ${error}`;
+    }
+  }
 
-//       await walletProvider.waitForTransactionReceipt(hash);
+  /**
+   * Checks if the Weth action provider supports the given network.
+   *
+   * @param network - The network to check.
+   * @returns True if the Weth action provider supports the network, false otherwise.
+   */
+  supportsNetwork = (network: Network) =>
+    network.networkId === "base-mainnet" ||
+    network.networkId === "base-sepolia";
+}
 
-//       return `Wrapped ETH with transaction hash: ${hash}`;
-//     } catch (error) {
-//       return `Error wrapping ETH: ${error}`;
-//     }
-//   }
-
-//   /**
-//    * Checks if the Weth action provider supports the given network.
-//    *
-//    * @param network - The network to check.
-//    * @returns True if the Weth action provider supports the network, false otherwise.
-//    */
-//   supportsNetwork = (network: Network) =>
-//     network.networkId === "base-mainnet" ||
-//     network.networkId === "base-sepolia";
-// }
-
-// export const myActionProvider = () => new MyActionProvider();
+export const myActionProvider = () => new MyActionProvider();
