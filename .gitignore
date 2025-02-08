@@ -1,3 +1,5 @@
 __pycache__/
+/.env
+/node_modules/
 /todo.txt
 /wallet_data.txt

@@ -8,7 +8,9 @@ dependencies = [
     "cdp-langchain>=0.0.13",
     "fastapi>=0.115.8",
     "langchain-cohere>=0.4.2",
+    "libsql-experimental>=0.0.41",
     "python-dotenv>=1.0.1",
     "smolagents>=1.7.0",
+    "sqlalchemy-libsql>=0.1.0",
     "uvicorn>=0.34.0",
 ]

@@ -1,0 +1,20 @@
+{
+  "name": "ageth",
+  "type": "module",
+  "devDependencies": {
+    "@types/mocha": "^10.0.10"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@coinbase/agentkit": "^0.1.2",
+    "@coinbase/agentkit-langchain": "^0.1.0",
+    "@langchain/cohere": "^0.3.2",
+    "@langchain/core": "^0.3.39",
+    "@langchain/langgraph": "^0.2.45",
+    "@langchain/openai": "^0.4.3",
+    "dotenv": "^16.4.7",
+    "zod": "^3.24.1"
+  }
+}
