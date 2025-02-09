@@ -8,6 +8,7 @@
     "chat": "DEBUGGING=1 $npm_execpath src/utils/chatbot.ts"
   },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/mocha": "^10.0.10",
     "prettier": "^3.4.2"
   },

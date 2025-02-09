@@ -7,16 +7,14 @@ import {
   EvmWalletProvider,
 } from "@coinbase/agentkit";
 
-export const UnwrapEthSchema = z
+const UnwrapEthSchema = z
   .object({
     amountToUnwrap: z.string().describe("Amount of ETH to unwrap in wei"),
   })
   .strip()
-  .describe("Instructions for unwrapping ETH to WETH");
-
-export const WETH_ADDRESS = "0x4200000000000000000000000000000000000006";
-
-export const WETH_ABI = [
+  .describe("Instructions for unwrapping WETH to ETH");
+const WETH_ADDRESS = "0x4200000000000000000000000000000000000006";
+const WETH_ABI = [
   {
     inputs: [],
     name: "deposit",
@@ -51,28 +49,14 @@ export const WETH_ABI = [
   },
 ] as const;
 
-/**
- * WethActionProvider is an action provider for WETH.
- */
-export class MyActionProvider extends ActionProvider<EvmWalletProvider> {
-  /**
-   * Constructor for the WethActionProvider.
-   */
+export class UnwrapWethActionProvider extends ActionProvider<EvmWalletProvider> {
   constructor() {
     super("unwrap_weth", []);
   }
 
-  /**
-   * Wraps ETH to WETH.
-   *
-   * @param walletProvider - The wallet provider to use for the action.
-   * @param args - The input arguments for the action.
-   * @returns A message containing the transaction hash.
-   */
   @CreateAction({
     name: "unwrap_weth",
-    description: `
-    This tool can only be used to unwrap ETH to WETH.`,
+    description: "",
     schema: UnwrapEthSchema,
   })
   async myAction(
@@ -97,15 +81,9 @@ export class MyActionProvider extends ActionProvider<EvmWalletProvider> {
     }
   }
 
-  /**
-   * Checks if the Weth action provider supports the given network.
-   *
-   * @param network - The network to check.
-   * @returns True if the Weth action provider supports the network, false otherwise.
-   */
   supportsNetwork = (network: Network) =>
     network.networkId === "base-mainnet" ||
     network.networkId === "base-sepolia";
 }
 
-export const myActionProvider = () => new MyActionProvider();
+export const unwrapWethActionProvider = () => new UnwrapWethActionProvider();

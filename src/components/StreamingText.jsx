@@ -43,20 +43,28 @@ export default function StreamingText() {
 
   return (
     <div className="p-4 bg-gray-100 rounded">
-      <input
-        type="text"
-        placeholder="Enter a prompt..."
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        className="p-2 border rounded w-full box-border"
-      />
-      <button
-        onClick={fetchStream}
-        disabled={loading}
-        className="mt-2 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          fetchStream();
+        }}
       >
-        {loading ? "Loading..." : "Start Streaming"}
-      </button>
+        <input
+          type="text"
+          placeholder="Enter a prompt..."
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="p-2 border rounded w-full box-border"
+          autoFocus
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
+        >
+          {loading ? "Loading..." : "Start Streaming"}
+        </button>
+      </form>
       <div className="font-mono mt-8">
         {text.length > 0
           ? text.map((line, index) => (

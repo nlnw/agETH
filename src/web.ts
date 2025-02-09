@@ -1,5 +1,5 @@
 import express from "express";
-import { runPrompt } from "./chatbot";
+import { runPrompt } from "./utils/chatbot";
 
 const app = express();
 

@@ -9,7 +9,7 @@ import {
   cdpWalletActionProvider,
   pythActionProvider,
 } from "@coinbase/agentkit";
-// import { myActionProvider } from "./myActionProvider";
+// import { unwrapWethActionProvider } from "./unwrapWethActionProvider";
 import { getLangChainTools } from "@coinbase/agentkit-langchain";
 import { HumanMessage } from "@langchain/core/messages";
 import { MemorySaver } from "@langchain/langgraph";
@@ -70,7 +70,7 @@ async function initialize() {
           "\n"
         ),
       }),
-      // myActionProvider(),
+      // unwrapWethActionProvider(),
       // cdpWalletActionProvider({
       //   apiKeyName: process.env.CDP_API_KEY_NAME,
       //   apiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(/\\n/g, "\n"),
@@ -233,13 +233,13 @@ async function chooseMode(): Promise<"chat" | "auto"> {
 async function main() {
   try {
     const { agent, config } = await initialize();
-    const mode = await chooseMode();
+    // const mode = await chooseMode();
 
-    if (mode === "chat") {
-      await runChatMode(agent, config);
-    } else {
-      await runAutonomousMode(agent, config);
-    }
+    // if (mode === "chat") {
+    await runChatMode(agent, config);
+    // } else {
+    // await runAutonomousMode(agent, config);
+    // }
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);

@@ -2,13 +2,6 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-  },
-  "include": [
-    ".astro/types.d.ts",
-    "**/*"
-  ],
-  "exclude": [
-    "dist"
-  ]
+    "emitDecoratorMetadata": true
+  }
 }
