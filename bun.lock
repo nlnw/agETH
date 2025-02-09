@@ -29,6 +29,9 @@
       },
     },
   },
+  "patchedDependencies": {
+    "@coinbase/agentkit@0.1.2": "patches/@coinbase%2Fagentkit@0.1.2.patch",
+  },
   "packages": {
     "@adraffy/ens-normalize": ["@adraffy/ens-normalize@1.10.1", "", {}, "sha512-96Z2IP3mYmF1Xg2cDm8f1gWGf/HUVedQ3FMifV4kG/PQ4yEP51xDtRAEfhVNt5f/uzpNkZHwWQuUcu6D6K+Ekw=="],
 

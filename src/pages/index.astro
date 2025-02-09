@@ -8,11 +8,41 @@ import StreamingText from "../components/StreamingText.jsx";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
+    <title>Ageth</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #333;
+      }
+      .container {
+        text-align: center;
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        margin-bottom: 1rem;
+      }
+      .prompt {
+        margin-top: 1rem;
+      }
+    </style>
   </head>
   <body>
-    <h1>Astro</h1>
-    <h1>Streaming Data:</h1>
-    <StreamingText client:load />
+    <div class="container">
+      <h1>Ageth</h1>
+      <h2>Enter prompt:</h2>
+      <div class="prompt">
+        <StreamingText client:load />
+      </div>
+    </div>
   </body>
 </html>

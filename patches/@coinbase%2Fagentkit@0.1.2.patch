@@ -1,0 +1,14 @@
+diff --git a/dist/action-providers/actionDecorator.js b/dist/action-providers/actionDecorator.js
+index e4291c0cfda3c970f85276313276f1cfc3b7753b..043f783028727fc6c9e03e466d5b447215b064ee 100644
+--- a/dist/action-providers/actionDecorator.js
++++ b/dist/action-providers/actionDecorator.js
+@@ -77,7 +77,8 @@ function validateActionMethodArguments(target, propertyKey) {
+     const className = target instanceof Object ? target.constructor.name : undefined;
+     const params = Reflect.getMetadata("design:paramtypes", target, propertyKey);
+     if (params == null) {
+-        throw new Error(`Failed to get parameters for action method ${propertyKey} on class ${className}`);
++        return {isWalletProvider: true};
++        // throw new Error(`Failed to get parameters for action method ${propertyKey} on class ${className}`);
+     }
+     if (params.length > 2) {
+         throw new Error(`Action method ${propertyKey} on class ${className} has more than 2 parameters`);

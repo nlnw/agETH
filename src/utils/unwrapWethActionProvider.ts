@@ -59,7 +59,7 @@ export class UnwrapWethActionProvider extends ActionProvider<EvmWalletProvider> 
     description: "",
     schema: UnwrapEthSchema,
   })
-  async myAction(
+  async unwrapWeth(
     walletProvider: EvmWalletProvider,
     args: z.infer<typeof UnwrapEthSchema>
   ): Promise<string> {
@@ -77,7 +77,7 @@ export class UnwrapWethActionProvider extends ActionProvider<EvmWalletProvider> 
 
       return `Unwrapped ETH with transaction hash: ${hash}`;
     } catch (error) {
-      return `Error wrapping ETH: ${error}`;
+      return `Error unwrapping ETH: ${error}`;
     }
   }
 

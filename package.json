@@ -30,5 +30,8 @@
     "react-dom": "^19.0.0",
     "unocss": "^65.4.3",
     "zod": "^3.24.1"
+  },
+  "patchedDependencies": {
+    "@coinbase/agentkit@0.1.2": "patches/@coinbase%2Fagentkit@0.1.2.patch"
   }
 }

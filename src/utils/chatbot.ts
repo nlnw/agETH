@@ -9,7 +9,8 @@ import {
   cdpWalletActionProvider,
   pythActionProvider,
 } from "@coinbase/agentkit";
-// import { unwrapWethActionProvider } from "./unwrapWethActionProvider";
+import { unwrapWethActionProvider } from "./unwrapWethActionProvider";
+import { aaveYieldsActionProvider } from "./aaveYieldsActionProvider";
 import { getLangChainTools } from "@coinbase/agentkit-langchain";
 import { HumanMessage } from "@langchain/core/messages";
 import { MemorySaver } from "@langchain/langgraph";
@@ -70,7 +71,8 @@ async function initialize() {
           "\n"
         ),
       }),
-      // unwrapWethActionProvider(),
+      unwrapWethActionProvider(),
+      aaveYieldsActionProvider(),
       // cdpWalletActionProvider({
       //   apiKeyName: process.env.CDP_API_KEY_NAME,
       //   apiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(/\\n/g, "\n"),
